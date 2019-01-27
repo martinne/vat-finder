@@ -1,13 +1,11 @@
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.cert.CollectionCertStoreParameters;
 import java.util.*;
 
 /**
@@ -31,11 +29,13 @@ public class Finder {
         String actualVatsJSON = getJSON(URL_JSON);
 
         //process payload
-        processPayload(actualVatsJSON);
+        List<Country> countries = getSortedCountries(actualVatsJSON);
+
+        printHighestAndLowest(countries);
 
     }
 
-    protected static void processPayload(String actualVatsJSON) {
+    protected static List<Country> getSortedCountries(String actualVatsJSON) {
 
         //make collection of countries from payload
         Gson g = new Gson();
@@ -44,8 +44,7 @@ public class Finder {
         //order the collection
         Collections.sort(countries.getRates(), new CountryComparator());
 
-        //prints output to console
-        printHighestAndLowest(countries.getRates());
+        return countries.getRates();
 
     }
 
@@ -55,6 +54,7 @@ public class Finder {
         BufferedReader rd;
         String line;
         String result = "";
+
         try {
             url = new URL(urlToRead);
             conn = (HttpURLConnection) url.openConnection();

@@ -3,9 +3,6 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -14,10 +11,12 @@ public class TestFinder {
 
     @Test
     //tests processing without internet oonnection
-    public void processPayload() {
+    public void getSortedCountries() {
 
         String payload = readFile("src/test/resources/jsonvat.com.json");
-        Finder.processPayload(payload);
+        List<Country> countries =  Finder.getSortedCountries(payload);
+        assertEquals("LU", countries.get(0).getCountry_code());
+        assertEquals("HU", countries.get(countries.size()-1).getCountry_code());
 
     }
 
